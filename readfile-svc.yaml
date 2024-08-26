@@ -69,13 +69,24 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: release-name-oauth2-proxy2
+            name: release-name-oauth2-proxy
+            port:
+              number: 80
+  - host: vvv.readfile.local
+    http:
+      paths:
+      - path: /oauth2
+        pathType: Prefix
+        backend:
+          service:
+            name: release-name-oauth2-proxy
             port:
               number: 80
   tls:
   - hosts:
     - readfile.local
     - www.readfile.local
+    - vvv.readfile.local
     secretName: tls-readfile-local
     
 ---
@@ -118,8 +129,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    nginx.ingress.kubernetes.io/auth-url: "https://auth.instance2.arpa/oauth2/auth"
-    nginx.ingress.kubernetes.io/auth-signin: "https://www.readfile.local/oauth2/start?rd=https://auth.instance2.arpa/"
+    #nginx.ingress.kubernetes.io/auth-url: "https://auth.instance2.arpa/oauth2/auth"
+    #nginx.ingress.kubernetes.io/auth-signin: "https://www.readfile.local/oauth2/start?rd=https://auth.instance2.arpa/"
+    nginx.ingress.kubernetes.io/auth-url: "https://auth.home.arpa/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=https://auth.home.arpa/"
     nginx.ingress.kubernetes.io/proxy-buffer-size: "64k"
   name: external-auth-svc2
 spec:
@@ -140,6 +153,31 @@ spec:
     #- vvv.readfile.local
     #- www.readfile.local
     #secretName: tls-readfile-local
+    
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    #nginx.ingress.kubernetes.io/auth-url: "https://auth.instance2.arpa/oauth2/auth"
+    #nginx.ingress.kubernetes.io/auth-signin: "https://www.readfile.local/oauth2/start?rd=https://auth.instance2.arpa/"
+    nginx.ingress.kubernetes.io/auth-url: "https://auth.home.arpa/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=https://auth.home.arpa/"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "64k"
+  name: external-auth-svc3
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: vvv.readfile.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: readfile-svc
+            port:
+              number: 80
        
               
               

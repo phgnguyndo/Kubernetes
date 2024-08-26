@@ -142,6 +142,8 @@ spec:
           - --cookie-samesite=none
           - --client-id=test-user
           - --email-domain=*
+          - --cookie-domain=.readfile.local
+          - --whitelist-domain=.readfile.local
           #- --whitelist-domain=*.home.arpa
           - --pass-authorization-header=true
           - --pass-access-token=true
